@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by echo on 16-9-23.
@@ -53,6 +52,7 @@ public class ControllerTest {
     String keySeq = "1/0=";
     CalcContext ctx = parseExpression(keySeq);
     System.out.println(ctx);
+    assertContext(ctx, "1", Operator.DIVISION, "0", CalcStatus.POSITIVE_INFINITY.desc);
   }
 
   private void assertContext(CalcContext ctx, String leftValue, Operator operator, String rightValue, String result) {

@@ -120,6 +120,12 @@ public class CalculateController {
   }
 
   private void calcResult() {
+
+    if (CalcStatus.NORMAL != ctx.getStatus()) {
+      ctx.setResult(ctx.getResult());
+      return;
+    }
+
     String leftValue = ctx.getLeftOp().getValue();
     String rightValue = ctx.getRightOp().getValue();
     String result;
@@ -137,7 +143,12 @@ public class CalculateController {
       case DIVISION:
         //进行除以0判断
         if (BigDecimal.ZERO.compareTo(new BigDecimal(rightValue)) == 0) {
-          result = "POSITIVE INFINITY";
+          if (new BigDecimal(leftValue).compareTo(BigDecimal.ZERO) > 0) {
+            result = CalcStatus.POSITIVE_INFINITY.desc;
+            ctx.setStatus(CalcStatus.POSITIVE_INFINITY);
+          } else {
+            ctx.setStatus(CalcStatus.NEGATIVE_INFINITY);
+          }
           break;
         }
         result = ArithmeticUtil.divide(leftValue, rightValue).toString();
