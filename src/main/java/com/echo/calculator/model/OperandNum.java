@@ -1,6 +1,10 @@
 package com.echo.calculator.model;
 
+import com.echo.calculator.constant.Identifier;
+import com.echo.calculator.util.IdentifierUtil;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -8,33 +12,44 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@Data
 public class OperandNum {
-  public static final String DEFAULT_ZERO_VALUE = "0";
-  private String value = DEFAULT_ZERO_VALUE;
-  private boolean sign = true;
+  public static final OperandNum ZERO = new OperandNum("0");
+  private String value;
 
   public void readChar(char c) {
     //当前为0，若输入字符也是0，不处理
     if ("0".equals(value) && '0' == c) {
       return;
     }
-    if (isDigit(c)) {
+    if (IdentifierUtil.isDigit(c)) {
+      if ("0".equals(value)) {
+        value = "";
+      }
       value += c;
     }
-    if (isDot(c)) {
+    if (IdentifierUtil.isDot(c)) {
       if (!value.contains(".")) {
         value += c;
       }
     }
-    if (isMinus(c)) {
-      sign = !sign;
+    if (IdentifierUtil.isSign(c)) {
+
+      if (!value.startsWith("-")) {
+        value = "-" + value;
+      }
     }
   }
 
   public void clear() {
-    this.value = DEFAULT_ZERO_VALUE;
-    this.sign = true;
+    this.value = "0";
   }
 
-
+  public void setValue(String value) {
+    if (value.startsWith("-")) {
+      this.value = value.substring(1);
+      return;
+    }
+    this.value = value;
+  }
 }

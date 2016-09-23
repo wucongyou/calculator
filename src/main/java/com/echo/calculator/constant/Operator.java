@@ -8,27 +8,42 @@ package com.echo.calculator.constant;
  * 定义将会使用到的符号
  */
 public enum Operator {
-  PLUS("+"),
 
-  MINUS("-"),
+  BLANK(' '),
 
-  TIMES("*"),
+  PLUS('+'),
 
-  DIVISION("/"),
+  MINUS('-'),
 
-  SIGN("+/-"),
+  TIMES('*'),
 
-  EQUAL("="),
+  DIVISION('/'),
 
-  DOT(".");
+  SIGN('~'),
 
-  public String value;
+  EQUAL('='),
 
-  Operator(String value) {
+  DOT('.'),
+
+  CLEAR('c');
+
+  public char value;
+
+  Operator(char value) {
     this.value = value;
   }
 
-  public static Operator getBy(String value) {
-    return Operator.valueOf(value);
+  public char getValue() {
+    return value;
   }
+
+  public static Operator getByValue(char value) {
+    for (Operator operator : Operator.values()) {
+      if (operator.getValue() == value) {
+        return operator;
+      }
+    }
+    return null;
+  }
+
 }

@@ -1,36 +1,47 @@
 package com.echo.calculator.controller;
 
-import com.echo.calculator.constant.Identifier;
+import com.echo.calculator.constant.CalcStatus;
 import com.echo.calculator.constant.Operator;
 import com.echo.calculator.constant.State;
-import com.echo.calculator.model.OperandNum;
+import com.echo.calculator.model.CalcContext;
+import com.echo.calculator.util.ArithmeticUtil;
 import com.echo.calculator.util.IdentifierUtil;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * Created by echo on 16-9-21.
  */
 public class CalculateController {
-  private String result = "0";
-  private char symbol_use = ' ';    // 最近一次运算被选中的符号，默认为空
-  private State c_state = State.st1;   // 初始状态直接从 st1 开始好了
 
-  private OperandNum op_left = new OperandNum(),  // 定义左、右操作数
-      op_right = new OperandNum();
+  public static final String DEFAULT_RESULT = "0";
+
+  private CalcContext ctx;
+
+  public CalculateController(CalcContext ctx) {
+    this.ctx = ctx;
+  }
 
   // 在屏幕上显示的内容，依据当前的不同状态来定。
   public String getExpression() {
-    switch (c_state) {
+    String leftValue = ctx.getLeftOp().getValue();
+    char operatorValue = ctx.getRecentOperator().value;
+    String rightValue = ctx.getRightOp().getValue();
+    String result = ctx.getResult();
+    switch (ctx.getState()) {
       case RESET:
-      case LEFT_OPERAND:
-        return op_left.getValue();
-      case OPERATOR:
-        return op_left.getValue() + symbol_use;
-      case RIGHT_OPERAND:
-        return op_left.getValue() + symbol_use + op_right.getValue();
+      case LEFT_OPERAND_WAIT:
+        return leftValue;
+      case OPERATOR_WAIT:
+        return leftValue + operatorValue;
+      case RIGHT_OPERAND_WAIT:
+        return leftValue + operatorValue + rightValue;
       case SHOW:
-        return Operator.EQUAL.value + result;
+        return result;
       default:
-        return "0";
+        return DEFAULT_RESULT;
     }
   }
 
@@ -38,138 +49,139 @@ public class CalculateController {
    * 重置
    */
   private void reset() {
-    op_left.clear();
-    op_right.clear();
-    result = "0";
-    c_state = State.LEFT_OPERAND;
+    ctx.getLeftOp().clear();
+    ctx.getRightOp().clear();
+    ctx.setResult("0");
+    ctx.setRecentOperator(Operator.BLANK);
+    ctx.setState(State.RESET);
   }
 
-  private void fun_st1_basic(char c) {
+  private void readLeftOperand(char c) {
+
     if (IdentifierUtil.isDigit(c) || IdentifierUtil.isDot(c) || IdentifierUtil.isSign(c)) {
-      op_left.readChar(c);
-      c_state = State.LEFT_OPERAND;
-    } else if (c == operator) {
-      // result =
-      symbol_use = '=';
-      fun_result();
-      c_state = STATE.st4;
-    } else if (c == 'c') { // 按下C键
+      ctx.getLeftOp().readChar(c);
+    } else if (c == Operator.EQUAL.value) {
+      ctx.setRecentOperator(Operator.EQUAL);
+      calcResult();
+      ctx.setState(State.SHOW);
+    } else if (c == Operator.CLEAR.value) { // 按下C键
       reset();
-      c_state = STATE.st0;
-    } else { // 输入运算符号
-      fun_st2(c);
-      c_state = STATE.st2;
-    }
-  }
-
-  private void fun_st2(char key) {
-    if (key == '+' || key == '-' || key == '*' || key == '/') {
-      symbol_use = key;
-      c_state = STATE.st2;
-    } else if ((key >= '0' && key <= '9') || key == '.' || key == '~') {
-      fun_st3(key);
-      c_state = STATE.st3;
-    }
-  }
-
-  private void fun_st3(char key) {
-    if ((key >= '0' && key <= '9') || key == '.' || key == '~') {
-      op_right.pushDigital(key);
-      c_state = STATE.st3;
-    } else if (key == '=') {
-      // result =
-      fun_result();
-      c_state = STATE.st4;
-    } else if (key == 'c') { // 按下C键
-      reset();
-      c_state = STATE.st0;
+      ctx.setState(State.LEFT_OPERAND_WAIT);
     } else {
-      c_state = STATE.st5; // 按下运算符号
-      fun_st5(key);
+      ctx.setState(State.OPERATOR_WAIT);
+      readOperator(c);
     }
   }
 
-  void fun_st4(char key) { // 此时，已经显示出了结果
+  private void readOperator(char key) {
+    if (key == '+' || key == '-' || key == '*' || key == '/') {
+      ctx.setRecentOperator(Operator.getByValue(key));
+      ctx.setState(State.RIGHT_OPERAND_WAIT);
+    } else if ((key >= '0' && key <= '9') || key == '.' || key == '~') {
+      readOperandRight(key);
+      ctx.setState(State.OPERATOR_WAIT);
+    }
+  }
+
+  private void readOperandRight(char key) {
+    if ((key >= '0' && key <= '9') || key == '.' || key == '~') {
+      ctx.getRightOp().readChar(key);
+    } else if (key == Operator.EQUAL.value) {
+      calcResult();
+      ctx.setState(State.SHOW);
+    } else if (key == Operator.CLEAR.value) { // 按下C键
+      reset();
+      ctx.setState(State.RESET);
+    } else {
+      ctx.setState(State.CONTINUE);
+      beforeContinue(key);
+    }
+  }
+
+  void showing(char key) { // 此时，已经显示出了结果
     if ((key >= '0' && key <= '9') || key == '.' || key == '~') {
       reset();
-      op_left.pushDigital(key);
-      c_state = STATE.st1;
-    } else if (key == '+' || key == '-' || key == '*' || key == '/') { // 输入运算符号
-      op_left.setValue(result);
-      op_right.setClear();
-      fun_st2(key);
-      c_state = STATE.st2;
+      ctx.getLeftOp().readChar(key);
+      ctx.setState(State.LEFT_OPERAND_WAIT);
+    } else if (key == '+' || key == '-' || key == '*' || key == '/') {
+      ctx.getLeftOp().setValue(ctx.getResult());
+      ctx.getRightOp().clear();
+      readOperator(key);
+      ctx.setState(State.OPERATOR_WAIT);
     }
   }
 
-  void fun_st5(char key) {
-    fun_result();
-    op_left.setValue(result);
-    op_right.setClear();
-    fun_st2(key);
-    c_state = STATE.st2;
+  void beforeContinue(char key) {
+    calcResult();
+    ctx.getLeftOp().setValue(ctx.getResult());
+    ctx.getRightOp().clear();
+    readOperator(key);
+    ctx.setState(State.OPERATOR_WAIT);
   }
 
-  private void fun_result() {
-    switch (symbol_use) {
-      case '+':
-        result = op_left.value() + op_right.value();
+  private void calcResult() {
+    String leftValue = ctx.getLeftOp().getValue();
+    String rightValue = ctx.getRightOp().getValue();
+    String result;
+
+    switch (ctx.getRecentOperator()) {
+      case PLUS:
+        result = ArithmeticUtil.add(leftValue, rightValue).toString();
         break;
-      case '-':
-        result = op_left.value() - op_right.value();
+      case MINUS:
+        result = ArithmeticUtil.subtract(leftValue, rightValue).toString();
         break;
-      case '*':
-        result = op_left.value() * op_right.value();
+      case TIMES:
+        result = ArithmeticUtil.multiply(leftValue, rightValue).toString();
         break;
-      case '/':
-        if (op_right.value() == 0.0)
-          result = Double.POSITIVE_INFINITY;
-        else
-          result = op_left.value() / op_right.value();
+      case DIVISION:
+        //进行除以0判断
+        if (BigDecimal.ZERO.compareTo(new BigDecimal(rightValue)) == 0) {
+          result = "POSITIVE INFINITY";
+          break;
+        }
+        result = ArithmeticUtil.divide(leftValue, rightValue).toString();
         break;
-      default: // 等号，或来自 st1 的直接按下等号
-        result = op_left.value();
+      default:
+        result = leftValue;
         break;
     }
+    ctx.setResult(result);
   }
 
   // 在此函数中设定状态机模型
   void keyPressed(char key) {
-    //expression += key;
-    if (key == 'c')
-      c_state = STATE.st0; // 复位一下
-
-    switch (c_state) {
-      case st0:
-        reset(); // 初始状态，并且等待输入
-      case st1:
-        fun_st1_basic(key);
-        break; // 输入左操作数
-      // ===============
-      case st2:
-        fun_st2(key);
+    if (key == Operator.CLEAR.value) {
+      ctx.setState(State.RESET);
+    }
+    switch (ctx.getState()) {
+      case RESET:
+      case LEFT_OPERAND_WAIT:
+        readLeftOperand(key);
         break;
-      case st3:
-        fun_st3(key);
+      case OPERATOR_WAIT:
+        readOperator(key);
         break;
-      case st4:
-        fun_st4(key);
+      case RIGHT_OPERAND_WAIT:
+        readOperandRight(key);
         break;
-      case st5:
-        fun_st5(key);
+      case SHOW:
+        showing(key);
+        break;
+      case CONTINUE:
+        beforeContinue(key);
         break;
       default:
         reset();
-        c_state = STATE.st0;
         break;
     }
   }
 
-  // TODO: you can modify this method to print any debug
-  //  information (It will be called by CalculatorCmd)
-  void debugPrintStatus() {
-    // System.out.println("Expression = " + expression);
-    System.out.println("c_state" + c_state);
+  public CalcContext getCtx() {
+    return ctx;
   }
 
+  public void setCtx(CalcContext ctx) {
+    this.ctx = ctx;
+  }
 }

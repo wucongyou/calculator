@@ -5,18 +5,18 @@ import java.math.BigDecimal;
 /**
  * Created by echo on 16-9-21.
  */
-public class BigDecimalUtil {
+public class ArithmeticUtil {
 
   public static BigDecimal add(String fst, String snd) {
     return new BigDecimal(fst).add(new BigDecimal(snd));
   }
 
-  public static BigDecimal substract(String fst, String snd) {
-    return new BigDecimal(fst).subtract(snd);
+  public static BigDecimal subtract(String fst, String snd) {
+    return new BigDecimal(fst).subtract(new BigDecimal(snd));
   }
 
   public static BigDecimal multiply(String fst, String snd) {
-    return new BigDecimal(fst).multiply(snd);
+    return new BigDecimal(fst).multiply(new BigDecimal(snd));
   }
 
   public static BigDecimal divide(String fst, String snd) {

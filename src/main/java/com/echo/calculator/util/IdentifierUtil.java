@@ -10,7 +10,7 @@ public class IdentifierUtil {
   }
 
   public static boolean isDot(char c) {
-    return ',' == c;
+    return '.' == c;
   }
 
   public static boolean isMinus(char c) {
@@ -18,6 +18,6 @@ public class IdentifierUtil {
   }
 
   public static boolean isSign(char c) {
-    return c == '~';
+    return '~' == c;
   }
 }

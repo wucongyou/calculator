@@ -1,6 +1,6 @@
 package com.echo.calculator.service;
 
-import com.echo.calculator.util.BigDecimalUtil;
+import com.echo.calculator.util.ArithmeticUtil;
 
 /**
  * Created by echo on 16-9-21.
@@ -8,6 +8,6 @@ import com.echo.calculator.util.BigDecimalUtil;
 public class Multiplication implements IOperation {
   @Override
   public String doCalculate(Context context) {
-    return BigDecimalUtil.multiply(context.getFst(), context.getSnd()).toString();
+    return ArithmeticUtil.multiply(context.getFst(), context.getSnd()).toString();
   }
 }

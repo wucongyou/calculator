@@ -8,9 +8,9 @@ import lombok.Data;
 public enum State {
 
   RESET(0),
-  LEFT_OPERAND(1),
-  OPERATOR(2),
-  RIGHT_OPERAND(3),
+  LEFT_OPERAND_WAIT(1),
+  OPERATOR_WAIT(2),
+  RIGHT_OPERAND_WAIT(3),
   SHOW(4),
   CONTINUE(5);
 

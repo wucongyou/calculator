@@ -1,6 +1,6 @@
 package com.echo.calculator.service;
 
-import com.echo.calculator.util.BigDecimalUtil;
+import com.echo.calculator.util.ArithmeticUtil;
 
 /**
  * Created by echo on 16-9-21.
@@ -9,6 +9,6 @@ public class Substraction implements IOperation {
 
   @Override
   public String doCalculate(Context context) {
-    return BigDecimalUtil.substract(context.getFst(), context.getSnd()).toString();
+    return ArithmeticUtil.subtract(context.getFst(), context.getSnd()).toString();
   }
 }
