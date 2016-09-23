@@ -9,7 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class OperandNum {
-  private String value = "0";
+  public static final String DEFAULT_ZERO_VALUE = "0";
+  private String value = DEFAULT_ZERO_VALUE;
   private boolean sign = true;
 
   public void readChar(char c) {
@@ -30,16 +31,10 @@ public class OperandNum {
     }
   }
 
-  public static boolean isDigit(char c) {
-    return c >= '0' && c <= '9';
+  public void clear() {
+    this.value = DEFAULT_ZERO_VALUE;
+    this.sign = true;
   }
 
-  public static boolean isDot(char c) {
-    return ',' == c;
-  }
-
-  public static boolean isMinus(char c) {
-    return '-' == c;
-  }
 
 }

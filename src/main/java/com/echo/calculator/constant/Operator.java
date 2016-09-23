@@ -3,6 +3,10 @@ package com.echo.calculator.constant;
 /**
  * Created by echo on 16-9-21.
  */
+
+/**
+ * 定义将会使用到的符号
+ */
 public enum Operator {
   PLUS("+"),
 
