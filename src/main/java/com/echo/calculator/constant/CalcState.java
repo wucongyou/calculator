@@ -1,11 +1,9 @@
 package com.echo.calculator.constant;
 
-import lombok.Data;
-
 /**
  * Created by echo on 16-9-21.
  */
-public enum State {
+public enum CalcState {
 
   RESET(0),
   LEFT_OPERAND_WAIT(1),
@@ -16,7 +14,7 @@ public enum State {
 
   public int code;
 
-  State(int code) {
+  CalcState(int code) {
     this.code = code;
   }
 }

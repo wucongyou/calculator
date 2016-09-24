@@ -1,6 +1,6 @@
 package com.echo.calculator.model;
 
-import com.echo.calculator.constant.Identifier;
+import com.echo.calculator.constant.CalcOperator;
 import com.echo.calculator.util.IdentifierUtil;
 
 import lombok.AllArgsConstructor;
@@ -14,42 +14,46 @@ import lombok.Getter;
 @Getter
 @Data
 public class OperandNum {
-  public static final OperandNum ZERO = new OperandNum("0");
   private String value;
 
-  public void readChar(char c) {
+  public void readChar(CalcOperator idf) {
     //当前为0，若输入字符也是0，不处理
-    if ("0".equals(value) && '0' == c) {
-      return;
-    }
-    if (IdentifierUtil.isDigit(c)) {
-      if ("0".equals(value)) {
-        value = "";
-      }
-      value += c;
-    }
-    if (IdentifierUtil.isDot(c)) {
-      if (!value.contains(".")) {
-        value += c;
-      }
-    }
-    if (IdentifierUtil.isSign(c)) {
-
-      if (!value.startsWith("-")) {
-        value = "-" + value;
-      }
+    switch (idf) {
+      case ZERO:
+        if ("0".equals(value)) {
+          //do nothing
+          break;
+        }
+      case ONE:
+      case TWO:
+      case THREE:
+      case FOUR:
+      case FIVE:
+      case SIX:
+      case SEVEN:
+      case EIGHT:
+      case NINE:
+        if ("0".equals(value)) {
+          value = "";
+        } else if ("-0".equals(value)) {
+          value = "-";
+        }
+        value += idf.value;
+        break;
+      case DOT:
+        if (!value.contains(".")) {
+          value += idf.value;
+        }
+        break;
+      case SIGN:
+        if (!value.startsWith("-")) {
+          value = "-" + value;
+        }
+        break;
     }
   }
 
   public void clear() {
     this.value = "0";
-  }
-
-  public void setValue(String value) {
-    if (value.startsWith("-")) {
-      this.value = value.substring(1);
-      return;
-    }
-    this.value = value;
   }
 }

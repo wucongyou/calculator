@@ -3,6 +3,6 @@ package com.echo.calculator.service;
 /**
  * Created by echo on 16-9-21.
  */
-public interface IOperation {
+public interface Operation {
   String doCalculate(Context context);
 }

@@ -1,8 +1,8 @@
 package com.echo.calculator.model;
 
+import com.echo.calculator.constant.CalcState;
 import com.echo.calculator.constant.CalcStatus;
-import com.echo.calculator.constant.Operator;
-import com.echo.calculator.constant.State;
+import com.echo.calculator.constant.CalcOperator;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CalcContext {
 
-  private Operator recentOperator;
+  private CalcOperator recentOperator;
   private OperandNum leftOp;
   private OperandNum rightOp;
   private String result;
-  private State state;
+  private CalcState state;
   private CalcStatus status;
 
 

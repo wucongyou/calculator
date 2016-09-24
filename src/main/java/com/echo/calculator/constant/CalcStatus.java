@@ -1,7 +1,5 @@
 package com.echo.calculator.constant;
 
-import lombok.Data;
-
 /**
  * Created by echo on 16-9-23.
  */

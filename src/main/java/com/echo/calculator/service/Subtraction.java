@@ -5,7 +5,7 @@ import com.echo.calculator.util.ArithmeticUtil;
 /**
  * Created by echo on 16-9-21.
  */
-public class Substraction implements IOperation {
+public class Subtraction implements Operation {
 
   @Override
   public String doCalculate(Context context) {
