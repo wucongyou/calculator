@@ -78,4 +78,5 @@ public class HistoryTestAreaActionListener implements ActionListener {
       jta.setText("");
     }
   }
+
 }

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
  * Created by echo on 16-9-21.
  */
 public class ArithmeticUtil {
+
   private static final int DEFAULT_SCALE = 20;
 
   public static BigDecimal add(String fst, String snd) {
@@ -28,4 +29,5 @@ public class ArithmeticUtil {
     return new BigDecimal(Math.sin(new BigDecimal(num).doubleValue()))
         .divide(new BigDecimal(1), DEFAULT_SCALE, BigDecimal.ROUND_HALF_UP);
   }
+  
 }

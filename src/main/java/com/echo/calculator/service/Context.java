@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Context {
+
   private String fst;
+  
   private String snd;
+
 }

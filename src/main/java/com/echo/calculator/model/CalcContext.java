@@ -17,10 +17,15 @@ import lombok.NoArgsConstructor;
 public class CalcContext {
 
   private CalcOperator recentOperator;
+
   private OperandNum leftOp;
+
   private OperandNum rightOp;
+
   private String result;
+
   private CalcState state;
+
   private CalcStatus status;
 
 

@@ -3,13 +3,10 @@ package com.echo.calculator.model;
 import com.echo.calculator.constant.CalcStatus;
 import com.echo.calculator.constant.CalcOperator;
 import com.echo.calculator.constant.CalcState;
-import com.echo.calculator.model.CalcContext;
-import com.echo.calculator.model.CalculatorImpl;
-import com.echo.calculator.model.OperandNum;
 import com.echo.calculator.service.Addition;
 import com.echo.calculator.service.Division;
 import com.echo.calculator.service.Multiplication;
-import com.echo.calculator.service.Operation;
+import com.echo.calculator.service.IOperation;
 import com.echo.calculator.service.Subtraction;
 
 import org.junit.Test;
@@ -68,7 +65,7 @@ public class CalculatorImplTest {
 
   private CalcContext iniTestEnv(String exp) {
     //opes
-    Map<String, Operation> opes = new HashMap<>();
+    Map<String, IOperation> opes = new HashMap<>();
     opes.put(CalcOperator.PLUS.value + "", new Addition());
     opes.put(CalcOperator.MINUS.value + "", new Subtraction());
     opes.put(CalcOperator.TIMES.value + "", new Multiplication());

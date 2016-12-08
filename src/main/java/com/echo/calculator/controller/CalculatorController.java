@@ -8,7 +8,7 @@ package com.echo.calculator.controller;
 
 import com.echo.calculator.constant.CalcOperator;
 import com.echo.calculator.model.CalcContext;
-import com.echo.calculator.model.Calculator;
+import com.echo.calculator.model.ICalculator;
 import com.echo.calculator.model.CalculatorImpl;
 
 import java.awt.event.*;
@@ -17,8 +17,10 @@ import javax.swing.*;
 
 public class CalculatorController implements ActionListener {
 
-  private Calculator calc = new CalculatorImpl();
+  private ICalculator calc = new CalculatorImpl();
+
   private JTextField textField;
+
   private JTextArea textArea;
 
   public void actionPerformed(ActionEvent e) {
@@ -66,4 +68,5 @@ public class CalculatorController implements ActionListener {
   public void setTextArea(JTextArea textArea) {
     this.textArea = textArea;
   }
+  
 }

@@ -8,7 +8,7 @@ import com.echo.calculator.service.Context;
 import com.echo.calculator.service.Division;
 import com.echo.calculator.service.Equal;
 import com.echo.calculator.service.Multiplication;
-import com.echo.calculator.service.Operation;
+import com.echo.calculator.service.IOperation;
 import com.echo.calculator.service.Sine;
 import com.echo.calculator.service.Subtraction;
 
@@ -18,16 +18,17 @@ import java.util.Map;
 /**
  * Created by echo on 16-9-21.
  */
-public class CalculatorImpl implements Calculator {
+public class CalculatorImpl implements ICalculator {
 
   public static final String DEFAULT_RESULT = "0";
 
   private CalcContext ctx;
-  private Map<String, Operation> opes;
+
+  private Map<String, IOperation> opes;
 
   public CalculatorImpl() {
     //opes
-    Map<String, Operation> opes = new HashMap<>();
+    Map<String, IOperation> opes = new HashMap<>();
     opes.put(CalcOperator.PLUS.value + "", new Addition());
     opes.put(CalcOperator.MINUS.value + "", new Subtraction());
     opes.put(CalcOperator.TIMES.value + "", new Multiplication());
@@ -46,7 +47,7 @@ public class CalculatorImpl implements Calculator {
     this.opes = opes;
   }
 
-  public CalculatorImpl(CalcContext ctx, Map<String, Operation> opes) {
+  public CalculatorImpl(CalcContext ctx, Map<String, IOperation> opes) {
     this.ctx = ctx;
     this.opes = opes;
   }
@@ -123,7 +124,7 @@ public class CalculatorImpl implements Calculator {
     }
     String leftValue = ctx.getLeftOp().getValue();
     String rightValue = ctx.getRightOp().getValue();
-    Operation ope = lookUpOperation(ctx.getRecentOperator());
+    IOperation ope = lookUpOperation(ctx.getRecentOperator());
     if (null == ope) {
       ctx.setResult(leftValue);
       return;
@@ -137,7 +138,7 @@ public class CalculatorImpl implements Calculator {
     }
   }
 
-  private Operation lookUpOperation(CalcOperator operator) {
+  private IOperation lookUpOperation(CalcOperator operator) {
     return opes.get(operator.value + "");
   }
 
