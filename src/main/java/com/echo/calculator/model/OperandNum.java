@@ -1,19 +1,17 @@
 package com.echo.calculator.model;
 
 import com.echo.calculator.constant.CalcOperator;
-import com.echo.calculator.util.IdentifierUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 /**
  * Created by echo on 16-9-21.
  */
-@AllArgsConstructor
-@Getter
 @Data
+@AllArgsConstructor
 public class OperandNum {
+
   private String value;
 
   public void readChar(CalcOperator idf) {
@@ -56,4 +54,5 @@ public class OperandNum {
   public void clear() {
     this.value = "0";
   }
+
 }

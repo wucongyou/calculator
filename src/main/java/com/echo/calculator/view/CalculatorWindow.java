@@ -15,10 +15,15 @@ import javax.swing.border.*;
 import java.awt.event.*;
 
 public class CalculatorWindow extends JFrame {
+
   private JTextField textField;
+
   private JTextArea textArea;
+
   private JButton cancelButton, equalButton, dotButton;
+
   private JButton signButton, addButton, subButton, multiplyButton, divButton, sineButton;
+
   private JButton[] numButton;
 
   public CalculatorWindow() {
@@ -256,4 +261,5 @@ public class CalculatorWindow extends JFrame {
       numButton[i].setActionCommand(String.valueOf(i));
     }
   }
+
 }

@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 /**
  * Created by echo on 16-9-21.
  */
-public class Division implements Operation {
+public class Division implements IOperation {
+
   @Override
   public String doCalculate(Context context) {
 
@@ -25,4 +26,5 @@ public class Division implements Operation {
     result = ArithmeticUtil.divide(context.getFst(), context.getSnd()).toString();
     return result;
   }
+
 }
